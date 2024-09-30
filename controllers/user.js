@@ -44,6 +44,15 @@ const getUser = catchAsync(async (req, res, next) => {
   });
 });
 
+const getBookmarks = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).populate('bookmarks');
+  res.status(200).json({
+    message: 'Bookmark fetched',
+    story: user.bookmarks,
+    result: true,
+  });
+});
+
 const deleteUser = catchAsync(async (req, res, next) => {
   await User.findByIdAndDelete(req.user._id);
   return res.status(200).json({
@@ -52,4 +61,10 @@ const deleteUser = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { likeStory, saveStory, getUser, deleteUser };
+module.exports = {
+  likeStory,
+  saveStory,
+  getUser,
+  deleteUser,
+  getBookmarks,
+};
