@@ -43,4 +43,14 @@ const saveStory = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { likeStory, saveStory };
+const getUser = catchAsync(async (req, res, next) => {
+  const user = req.user;
+  if (!user) throw new AppError(404, 'Invalid User ID');
+  res.status(200).json({
+    message: 'User fetched',
+    user,
+    result: true,
+  });
+});
+
+module.exports = { likeStory, saveStory, getUser };

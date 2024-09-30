@@ -58,7 +58,7 @@ const update = catchAsync(async (req, res, next) => {
   if (req.body.cards) data.cards = req.body.cards;
   if (req.body.category) data.category = req.body.category;
 
-  let story = await Story.findByIdAndUpdate(id, { ...data });
+  let story = await Story.findByIdAndUpdate(id, { ...data }, { new: true });
   return res.status(200).json({
     message: 'Story Fetched',
     story,
