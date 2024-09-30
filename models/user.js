@@ -10,14 +10,12 @@ const userSchema = new schema({
     {
       type: schema.Types.ObjectId,
       ref: 'Story',
-      unique: true,
     },
   ],
   liked: [
     {
       type: schema.Types.ObjectId,
       ref: 'Story',
-      unique: true,
     },
   ],
 });
