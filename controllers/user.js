@@ -6,15 +6,6 @@ const AppError = require('../errors/appError');
 const Story = require('../models/story');
 const User = require('../models/user');
 
-// const profile = catchAsync(async (req, res, next) => {
-//   if (!req.user) throw new AppError(404, 'Invalid User ID');
-//   res.status(200).json({
-//     message: 'User Fetched Successfully',
-//     user: req.user,
-//     result: true,
-//   });
-// });
-
 const likeStory = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const user = req.user;
@@ -37,7 +28,7 @@ const saveStory = catchAsync(async (req, res, next) => {
   user.bookmarks.push(story);
   await user.save();
   res.status(200).json({
-    message: 'Story Liked',
+    message: 'Story Saved',
     user,
     result: true,
   });
@@ -53,4 +44,12 @@ const getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { likeStory, saveStory, getUser };
+const deleteUser = catchAsync(async (req, res, next) => {
+  await User.findByIdAndDelete(req.user._id);
+  return res.status(200).json({
+    message: 'User Deleted',
+    result: true,
+  });
+});
+
+module.exports = { likeStory, saveStory, getUser, deleteUser };

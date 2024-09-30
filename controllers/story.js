@@ -10,6 +10,7 @@ const getOne = catchAsync(async (req, res, next) => {
     { $inc: { views: 1 } },
     { new: true }
   );
+  if (!story) throw new AppError(404, 'Story not found');
   return res.status(200).json({
     message: 'Story Fetched',
     story,
@@ -59,8 +60,9 @@ const update = catchAsync(async (req, res, next) => {
   if (req.body.category) data.category = req.body.category;
 
   let story = await Story.findByIdAndUpdate(id, { ...data }, { new: true });
+  if (!story) throw new AppError(404, 'Story not found');
   return res.status(200).json({
-    message: 'Story Fetched',
+    message: 'Story Updated',
     story,
     result: true,
   });
@@ -76,6 +78,20 @@ const like = catchAsync(async (req, res, next) => {
   );
   req.story = story;
   next();
+});
+
+const deleteStory = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  if (!id) throw new AppError(300, 'Invalid request, No id');
+  let story = await Story.findById(id);
+  if (!story) throw new AppError(404, 'Story not found');
+  if (!story.author.equals(req.user._id))
+    throw new AppError(300, 'Invalid request');
+  await Story.findByIdAndDelete(id);
+  return res.status(200).json({
+    message: 'Story Deleted',
+    result: true,
+  });
 });
 
 const save = catchAsync(async (req, res, next) => {
@@ -98,4 +114,5 @@ module.exports = {
   update,
   like,
   save,
+  deleteStory,
 };
