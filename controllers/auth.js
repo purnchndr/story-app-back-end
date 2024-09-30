@@ -13,7 +13,7 @@ const register = catchAsync(async (req, res, next) => {
   user = await User.create(userdata);
   const token = jwt.sign({ token: user._id }, process.env.JWT_SECRETE);
   res.send({
-    username: user.username,
+    user,
     result: true,
     message: 'User created',
     token,
@@ -31,7 +31,7 @@ const login = catchAsync(async (req, res, next) => {
   if (!pass) throw new AppError(401, 'Incorrect Username or Password');
   return res.status(200).json({
     message: 'Logging successful',
-    username: user.username,
+    user,
     token,
     result: true,
   });
